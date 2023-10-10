@@ -13,7 +13,7 @@ def sample_batch_index(total, batch_size):
     return batch_idx
 
 # 获取Mnist数据集
-def getMnist(dataRoot, batchSize):
+def getMnist(dataRoot, batchSize, getDataSet=False):
     img_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
@@ -21,16 +21,20 @@ def getMnist(dataRoot, batchSize):
 
     Mnist = dset.MNIST(dataRoot, transform=img_transform, download=True)
     Mnist_dataloader = DataLoader(Mnist, batch_size=batchSize, shuffle=True, num_workers=0)
+    if getDataSet:
+        return Mnist_dataloader, Mnist
     return Mnist_dataloader
 
 # 获取Fashion Mnist数据集
-def getFashionMnist(dataRoot, batchSize):
+def getFashionMnist(dataRoot, batchSize, getDataSet = False):
     img_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
     ])
     FashionMnist = dset.FashionMNIST(dataRoot, transform=img_transform, download=True)
     FashionMnist_dataloader = DataLoader(FashionMnist, batch_size=batchSize, shuffle=True, num_workers=0)
+    if getDataSet:
+        return FashionMnist_dataloader, FashionMnist
     return FashionMnist_dataloader
 
 # 参数初始化

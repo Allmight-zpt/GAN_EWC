@@ -7,9 +7,9 @@ from utils.GAN import D, G
 from utils.tools import getMnist, getFashionMnist, sample_batch_index, createWorkDir, preProcess
 
 '''
-1. 使用在FashionMnist数据集上预训练得到的模型参数进行GAN模型的初始化
-2. 将EWC算法应用于GAN，让其在Mnist数据集上进行训练
-3. 让GAN在学习生成Mnist数据集的同时防止FashionMnist数据集的遗忘
+1. 使用OOD判别器进行判断，OOD判别器置信度底的图象记为data_new，即为生成新数据的尝试，置信度高的图象记为data_old
+2. 使用判别器对 data_new 进行判断，作为pred_fake
+3. 使用判别器对 data_old 进行判断，作为pred_real的一部分
 '''
 
 # 超参数设置
@@ -17,8 +17,9 @@ batchSize = 64
 imageSize = 28
 num_worker = 10
 num_epochs = 50001
+OOD_threshold = 0.8
 losses = []
-workDirName = "./result/test_EWC"
+workDirName = "./result/EWC_Double_Disc"
 MnistDataRoot = './data'
 FashionMnistDataRoot = './data'
 use_gpu = torch.cuda.is_available()
@@ -34,10 +35,12 @@ images = preProcess(dataloader)
 # 初始化生成器和判别器
 netG = G().to(device)
 netD = D().to(device)
+netD_OOD = D().to(device)
 
 # 加载预训练模型
 netD.load_state_dict(torch.load('./pretrain_weight/netD_20000.pt'))
 netG.load_state_dict(torch.load('./pretrain_weight/netG_20000.pt'))
+netD_OOD.load_state_dict(torch.load('./pretrain_weight/netD_20000.pt'))
 
 # 初始化优化器
 optimizerD = optim.RMSprop(netD.parameters(), lr=0.0002, alpha=0.9)
@@ -58,13 +61,14 @@ for epoch in range(num_epochs):
         noise = Variable(torch.randn(real.size()[0], 100, 1, 1)).to(device)
         fake = netG(noise)
         pred_real = netD(real)
-        pred_fake = netD(fake)
+        pred_fake_OOD = netD_OOD(fake)
         netD.zero_grad()
         loss_real = torch.mean(pred_real)
         loss_fake = torch.mean(pred_fake)
+        # 待完善
         ewc_loss = ewc.penalty(netD, gen=False)
 
-        errD = -loss_real + loss_fake + ewc_loss * 500
+        errD = -loss_real + loss_fake + ewc_loss * 0
         errD.backward(retain_graph = True)
         optimizerD.step()
 
