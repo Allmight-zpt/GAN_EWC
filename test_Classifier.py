@@ -1,3 +1,4 @@
+import numpy as np
 import torch.utils.data
 from torch.autograd import Variable
 from utils.GAN import D, G
@@ -26,7 +27,7 @@ netD = D().to(device)
 
 # 加载预训练模型
 netD.load_state_dict(torch.load('./result/FashionMnistClassifier/models/net_0009.pt'))
-netG.load_state_dict(torch.load('./result/test_EWC/models/netG_3000.pt'))
+netG.load_state_dict(torch.load('./result/test_EWC/models/netG_8000.pt'))
 
 # 构造工作目录
 createWorkDir(workDirName)
@@ -36,7 +37,7 @@ noise = Variable(torch.randn(batchSize, 100, 1, 1)).to(device)
 fake = netG(noise)
 pred_fake = netD(fake)
 pred_fake = pred_fake.cpu().detach().numpy()
-print(pred_fake)
+print(np.round(pred_fake))
 plt.plot(pred_fake)
 plt.ylim(0, 1)
 plt.show()

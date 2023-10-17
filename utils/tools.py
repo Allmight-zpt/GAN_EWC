@@ -6,11 +6,13 @@ from torchvision.transforms import transforms
 import torchvision.datasets as dset
 from torch.utils.data import DataLoader
 
+
 # 从数据集中随机采样
 def sample_batch_index(total, batch_size):
     total_idx = np.random.permutation(total)
     batch_idx = total_idx[:batch_size]
     return batch_idx
+
 
 # 获取Mnist数据集
 def getMnist(dataRoot, batchSize, getDataSet=False):
@@ -25,8 +27,9 @@ def getMnist(dataRoot, batchSize, getDataSet=False):
         return Mnist_dataloader, Mnist
     return Mnist_dataloader
 
+
 # 获取Fashion Mnist数据集
-def getFashionMnist(dataRoot, batchSize, getDataSet = False):
+def getFashionMnist(dataRoot, batchSize, getDataSet=False):
     img_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
@@ -37,6 +40,7 @@ def getFashionMnist(dataRoot, batchSize, getDataSet = False):
         return FashionMnist_dataloader, FashionMnist
     return FashionMnist_dataloader
 
+
 # 参数初始化
 def weights_init(m):
     classname = m.__class__.__name__
@@ -45,6 +49,7 @@ def weights_init(m):
     elif classname.find('BatchNorm') != -1:
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
+
 
 # 构造工作目录
 def createWorkDir(workDirName):
@@ -57,6 +62,7 @@ def createWorkDir(workDirName):
     if not os.path.exists(workDirName + '/gen_images'):
         os.makedirs(workDirName + '/gen_images')
 
+
 # 数据预处理
 def preProcess(dataloader):
     images = []
@@ -68,3 +74,14 @@ def preProcess(dataloader):
     images = torch.cat(images)
     print(images.shape)
     return images
+
+
+# 将一个batch的图片转换为一张图片
+def batchToOne(batchImage, row, col):
+    res = torch.tensor([])
+    for i in range(row):
+        temp_res = torch.tensor([])
+        for j in range(col):
+            temp_res = torch.cat((temp_res, batchImage[i * row + j]), dim=1)
+        res = torch.cat((res, temp_res), dim=2)
+    return res

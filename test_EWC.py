@@ -5,6 +5,7 @@ from torch.autograd import Variable
 from utils.EWC import EWC
 from utils.GAN import D, G
 from utils.tools import getMnist, getFashionMnist, sample_batch_index, createWorkDir, preProcess
+from torch.utils.tensorboard import SummaryWriter
 
 '''
 1. 使用在FashionMnist数据集上预训练得到的模型参数进行GAN模型的初始化
@@ -19,6 +20,7 @@ num_worker = 10
 num_epochs = 50001
 losses = []
 workDirName = "./result/test_EWC"
+logDir = './logs/test_EWC'
 MnistDataRoot = './data'
 FashionMnistDataRoot = './data'
 use_gpu = torch.cuda.is_available()
@@ -36,8 +38,8 @@ netG = G().to(device)
 netD = D().to(device)
 
 # 加载预训练模型
-netD.load_state_dict(torch.load('./pretrain_weight/netD_20000.pt'))
-netG.load_state_dict(torch.load('./pretrain_weight/netG_20000.pt'))
+netD.load_state_dict(torch.load('pretrain_weight/FashionMnist_netD_20000.pt'))
+netG.load_state_dict(torch.load('pretrain_weight/FashionMnist_netG_20000.pt'))
 
 # 初始化优化器
 optimizerD = optim.RMSprop(netD.parameters(), lr=0.0002, alpha=0.9)
@@ -48,6 +50,9 @@ createWorkDir(workDirName)
 
 # 创建EWC实例
 ewc = EWC(netG, netD, device, FashionMnist_dataloader)
+
+# 创建 SummaryWriter
+writer = SummaryWriter(log_dir=logDir)
 
 # 开始训练
 for epoch in range(num_epochs):
@@ -62,17 +67,20 @@ for epoch in range(num_epochs):
         netD.zero_grad()
         loss_real = torch.mean(pred_real)
         loss_fake = torch.mean(pred_fake)
-        ewc_loss = ewc.penalty(netD, gen=False)
-
-        errD = -loss_real + loss_fake + ewc_loss * 500
-        errD.backward(retain_graph = True)
+        ewc_loss_D = ewc.penalty(netD, gen=False)
+        writer.add_scalar(tag='ewc_loss_D', scalar_value=ewc_loss_D)
+        errD = -loss_real + loss_fake + ewc_loss_D * 10
+        errD.backward(retain_graph=True)
         optimizerD.step()
 
         for parm in netD.parameters():
             parm.data.clamp_(-0.01, 0.01)
 
     loss_fake_sum = loss_fake
-    errG = - loss_fake_sum + ewc.penalty(netG) * (10000/(epoch + 1))
+    ewc_loss_G = ewc.penalty(netG)
+    writer.add_scalar(tag='ewc_loss_G', scalar_value=ewc_loss_G)
+    writer.add_scalar(tag='loss_fake_sum', scalar_value=-loss_fake_sum)
+    errG = - loss_fake_sum + ewc_loss_G * 60000
     netG.zero_grad()
     errG.backward()
     optimizerG.step()
