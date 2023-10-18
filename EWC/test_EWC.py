@@ -15,20 +15,17 @@ from torch.utils.tensorboard import SummaryWriter
 
 # 超参数设置
 batchSize = 64
-imageSize = 28
-num_worker = 10
 num_epochs = 50001
 losses = []
-workDirName = "./result/test_EWC"
-logDir = './logs/test_EWC'
-MnistDataRoot = './data'
-FashionMnistDataRoot = './data'
+workDirName = "../result/test_EWC"
+logDir = '../logs/test_EWC'
+DataRoot = '../data'
 use_gpu = torch.cuda.is_available()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # 获取数据
-dataloader = getMnist(MnistDataRoot, batchSize)
-FashionMnist_dataloader = getFashionMnist(FashionMnistDataRoot, batchSize)
+dataloader = getMnist(DataRoot, batchSize)
+FashionMnist_dataloader = getFashionMnist(DataRoot, batchSize)
 
 # 数据预处理
 images = preProcess(dataloader)
@@ -38,8 +35,8 @@ netG = G().to(device)
 netD = D().to(device)
 
 # 加载预训练模型
-netD.load_state_dict(torch.load('pretrain_weight/FashionMnist_netD_20000.pt'))
-netG.load_state_dict(torch.load('pretrain_weight/FashionMnist_netG_20000.pt'))
+netD.load_state_dict(torch.load('../pretrain_weight/GANs/FashionMnist_netD_20000.pt'))
+netG.load_state_dict(torch.load('../pretrain_weight/GANs/FashionMnist_netG_20000.pt'))
 
 # 初始化优化器
 optimizerD = optim.RMSprop(netD.parameters(), lr=0.0002, alpha=0.9)

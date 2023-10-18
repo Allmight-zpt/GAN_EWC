@@ -42,9 +42,9 @@ netD = D().to(device)
 net_Classifier = D().to(device)
 
 # 加载预训练模型
-netD.load_state_dict(torch.load('pretrain_weight/FashionMnist_netD_20000.pt'))
-netG.load_state_dict(torch.load('pretrain_weight/FashionMnist_netG_20000.pt'))
-net_Classifier.load_state_dict(torch.load('./result/FashionMnistClassifier/models/net_0009.pt'))
+netD.load_state_dict(torch.load('../pretrain_weight/GANs/FashionMnist_netD_20000.pt'))
+netG.load_state_dict(torch.load('../pretrain_weight/GANs/FashionMnist_netG_20000.pt'))
+net_Classifier.load_state_dict(torch.load('../pretrain_weight/Classify/FM_M_O_Classify.pt'))
 
 # 初始化优化器
 optimizerD = optim.RMSprop(netD.parameters(), lr=0.0002, alpha=0.9)
