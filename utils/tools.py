@@ -82,6 +82,6 @@ def batchToOne(batchImage, row, col):
     for i in range(row):
         temp_res = torch.tensor([])
         for j in range(col):
-            temp_res = torch.cat((temp_res, batchImage[i * row + j]), dim=1)
-        res = torch.cat((res, temp_res), dim=2)
+            temp_res = torch.cat((temp_res, batchImage[i * col + j]), dim=2)
+        res = torch.cat((res, temp_res), dim=1)
     return res
