@@ -6,37 +6,37 @@ from utils.Siamese import SiameseNetwork, ContrastiveLoss
 from utils.tools import createWorkDir, getFashionMnist, getMnist
 import numpy as np
 '''
-阈值选择 0.8 最佳，测试结果如下：
-Accuracy: 48.28% Threshold: 0.00
-Accuracy: 62.62% Threshold: 0.10
-Accuracy: 72.13% Threshold: 0.20
-Accuracy: 75.67% Threshold: 0.30
-Accuracy: 77.55% Threshold: 0.40
-Accuracy: 78.61% Threshold: 0.50
-Accuracy: 79.09% Threshold: 0.60
-Accuracy: 79.31% Threshold: 0.70
-Accuracy: 79.32% Threshold: 0.80
-Accuracy: 79.17% Threshold: 0.90
-Accuracy: 78.70% Threshold: 1.00
-Accuracy: 78.03% Threshold: 1.10
-Accuracy: 77.37% Threshold: 1.20
-Accuracy: 76.54% Threshold: 1.30
-Accuracy: 75.59% Threshold: 1.40
-Accuracy: 74.50% Threshold: 1.50
-Accuracy: 73.17% Threshold: 1.60
-Accuracy: 71.64% Threshold: 1.70
-Accuracy: 69.98% Threshold: 1.80
-Accuracy: 67.93% Threshold: 1.90
-Accuracy: 65.82% Threshold: 2.00
-Accuracy: 63.69% Threshold: 2.10
-Accuracy: 61.75% Threshold: 2.20
-Accuracy: 60.12% Threshold: 2.30
-Accuracy: 58.90% Threshold: 2.40
-Accuracy: 57.87% Threshold: 2.50
-Accuracy: 57.02% Threshold: 2.60
-Accuracy: 56.34% Threshold: 2.70
-Accuracy: 55.80% Threshold: 2.80
-Accuracy: 55.39% Threshold: 2.90
+阈值选择参考，测试结果如下：
+Accuracy: 48.30% Threshold: 0.00
+Accuracy: 83.78% Threshold: 0.10
+Accuracy: 89.93% Threshold: 0.20
+Accuracy: 93.34% Threshold: 0.30
+Accuracy: 95.57% Threshold: 0.40
+Accuracy: 97.06% Threshold: 0.50
+Accuracy: 98.01% Threshold: 0.60
+Accuracy: 98.53% Threshold: 0.70
+Accuracy: 98.82% Threshold: 0.80
+Accuracy: 98.97% Threshold: 0.90
+Accuracy: 99.03% Threshold: 1.00
+Accuracy: 99.03% Threshold: 1.10
+Accuracy: 98.99% Threshold: 1.20
+Accuracy: 98.89% Threshold: 1.30
+Accuracy: 98.75% Threshold: 1.40
+Accuracy: 98.54% Threshold: 1.50
+Accuracy: 98.21% Threshold: 1.60
+Accuracy: 97.93% Threshold: 1.70
+Accuracy: 97.61% Threshold: 1.80
+Accuracy: 96.96% Threshold: 1.90
+Accuracy: 95.31% Threshold: 2.00
+Accuracy: 92.61% Threshold: 2.10
+Accuracy: 91.54% Threshold: 2.20
+Accuracy: 90.59% Threshold: 2.30
+Accuracy: 90.08% Threshold: 2.40
+Accuracy: 89.34% Threshold: 2.50
+Accuracy: 89.10% Threshold: 2.60
+Accuracy: 88.67% Threshold: 2.70
+Accuracy: 88.46% Threshold: 2.80
+Accuracy: 88.23% Threshold: 2.90
 '''
 # 定义超参数
 batchSize = 64
